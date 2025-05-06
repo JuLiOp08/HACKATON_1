@@ -1,8 +1,8 @@
 package com.example.pc_piatto.application;
 
-import com.example.pc_piatto.application.RestriccionEmpresaModeloService;
-import com.example.pc_piatto.DTO.RestriccionEmpresaModeloDTO;
-import com.example.pc_piatto.DTO.RestriccionEmpresaModeloDTO;
+import com.example.pc_piatto.domain.RestriccionEmpresaModeloService;
+import com.example.pc_piatto.dto.RestriccionEmpresaModeloDTO;
+import com.example.pc_piatto.dto.RestriccionEmpresaModeloDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
