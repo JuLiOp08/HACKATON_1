@@ -1,8 +1,6 @@
-package com.example.pc_piatto.application.RestriccionEmpresaModeloController;
+package com.example.pc_piatto.domain;
 
-import com.example.pc_piatto.domain.RestriccionEmpresaModelo;
-import com.example.pc_piatto.domain.Empresa;
-import com.example.pc_piatto.domain.ModeloIA;
+
 import com.example.pc_piatto.dto.RestriccionEmpresaModeloDTO;
 import com.example.pc_piatto.repository.EmpresaRepository;
 import com.example.pc_piatto.repository.ModeloIARepository;
