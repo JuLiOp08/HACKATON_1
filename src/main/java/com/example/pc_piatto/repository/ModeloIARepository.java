@@ -1,4 +1,4 @@
-package com.example.pc_piatto.Repositories;
+package com.example.pc_piatto.repository;
 
 import com.example.pc_piatto.domain.ModeloIA;
 import org.springframework.data.jpa.repository.JpaRepository;
