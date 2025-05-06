@@ -1,7 +1,7 @@
 package com.example.pc_piatto.application;
 
 import com.example.pc_piatto.application.UsuarioService;
-import com.example.pc_piatto.dto.UsuarioDto;
+import com.example.pc_piatto.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,22 +15,22 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<UsuarioDto> listarTodos() {
+    public List<UsuarioDTO> listarTodos() {
         return usuarioService.listarUsuarios();
     }
 
     @GetMapping("/{id}")
-    public UsuarioDto obtenerPorId(@PathVariable Long id) {
+    public UsuarioDTO obtenerPorId(@PathVariable Long id) {
         return usuarioService.obtenerUsuario(id);
     }
 
     @PostMapping
-    public UsuarioDto crear(@RequestBody UsuarioDto dto) {
+    public UsuarioDTO crear(@RequestBody UsuarioDTO dto) {
         return usuarioService.crearUsuario(dto);
     }
 
     @PutMapping("/{id}")
-    public UsuarioDto actualizar(@PathVariable Long id, @RequestBody UsuarioDto dto) {
+    public UsuarioDTO actualizar(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
         return usuarioService.actualizarUsuario(id, dto);
     }
 
