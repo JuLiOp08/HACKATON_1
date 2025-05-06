@@ -2,6 +2,7 @@ package com.example.pc_piatto.domain;
 
 import com.example.pc_piatto.dto.UsuarioDTO;
 import com.example.pc_piatto.repository.EmpresaRepository;
+import com.example.pc_piatto.repository.SolicitudIARepository;
 import com.example.pc_piatto.repository.UsuarioRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class UsuarioService {
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private SolicitudIARepository solicitudIARepository;
 
     public List<UsuarioDTO> listarUsuarios() {
         return usuarioRepository.findAll()
@@ -55,5 +58,12 @@ public class UsuarioService {
 
     public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);
+    }
+    public double obtenerConsumo(Long usuarioId) {
+        Usuario usuario = usuarioRepository.findById(usuarioId).orElseThrow();
+        return solicitudIARepository.findByUsuario(usuario)
+                .stream()
+                .mapToDouble(SolicitudIA::getCostoCalculado)
+                .sum();
     }
 }

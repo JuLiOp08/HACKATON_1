@@ -38,4 +38,8 @@ public class UsuarioController {
     public void eliminar(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
     }
+    @GetMapping("/{id}/consumption")
+    public double consumo(@PathVariable Long id) {
+        return usuarioService.obtenerConsumo(id);
+    }
 }
