@@ -1,7 +1,8 @@
 package com.example.pc_piatto.application;
 
 import com.example.pc_piatto.application.RestriccionEmpresaModeloService;
-import com.example.pc_piatto.dto.RestriccionEmpresaModeloDto;
+import com.example.pc_piatto.DTO.RestriccionEmpresaModeloDTO;
+import com.example.pc_piatto.DTO.RestriccionEmpresaModeloDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,18 +16,18 @@ public class RestriccionEmpresaModeloController {
     private RestriccionEmpresaModeloService service;
 
     @PostMapping
-    public RestriccionEmpresaModeloDto crear(@RequestBody RestriccionEmpresaModeloDto dto) {
-        return service.crearRestriccion(dto);
+    public RestriccionEmpresaModeloDTO crear(@RequestBody RestriccionEmpresaModeloDTO DTO) {
+        return service.crearRestriccion(DTO);
     }
 
     @GetMapping
-    public List<RestriccionEmpresaModeloDto> listar() {
+    public List<RestriccionEmpresaModeloDTO> listar() {
         return service.listarRestricciones();
     }
 
     @PutMapping("/{id}")
-    public RestriccionEmpresaModeloDto actualizar(@PathVariable Long id, @RequestBody RestriccionEmpresaModeloDto dto) {
-        return service.actualizarRestriccion(id, dto);
+    public RestriccionEmpresaModeloDTO actualizar(@PathVariable Long id, @RequestBody RestriccionEmpresaModeloDTO DTO) {
+        return service.actualizarRestriccion(id, DTO);
     }
 
     @DeleteMapping("/{id}")
