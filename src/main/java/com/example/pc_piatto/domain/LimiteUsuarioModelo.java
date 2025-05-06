@@ -3,6 +3,7 @@ package com.example.pc_piatto.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity
 @Data
 @NoArgsConstructor
