@@ -27,6 +27,7 @@ public class LimiteUsuarioModeloController {
         return UsuarioService.listarUsuarios();
     }
 
+
     @GetMapping("/{id}")
     public UsuarioDTO obtener(@PathVariable Long id) {
         return UsuarioService.obtenerUsuario(id);
