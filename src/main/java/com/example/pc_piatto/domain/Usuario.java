@@ -3,6 +3,8 @@ package com.example.pc_piatto.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -25,4 +27,5 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
+
 }
