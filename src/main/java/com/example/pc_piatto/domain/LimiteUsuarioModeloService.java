@@ -1,8 +1,5 @@
 package com.example.pc_piatto.domain;
 
-import com.example.pc_piatto.domain.LimiteUsuarioModelo;
-import com.example.pc_piatto.domain.ModeloIA;
-import com.example.pc_piatto.domain.Usuario;
 import com.example.pc_piatto.dto.LimiteUsuarioModeloDTO;
 import com.example.pc_piatto.repository.LimiteUsuarioModeloRepository;
 import com.example.pc_piatto.repository.ModeloIARepository;
@@ -39,6 +36,10 @@ public class LimiteUsuarioModeloService {
     }
 
     public LimiteUsuarioModeloDTO crear(LimiteUsuarioModeloDTO dto) {
+        LimiteUsuarioModelo limite = new LimiteUsuarioModelo();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.map(dto, limite);
 
+        return modelMapper.map(limiteRepo.save(limite), LimiteUsuarioModeloDTO.class);
     }
 }
