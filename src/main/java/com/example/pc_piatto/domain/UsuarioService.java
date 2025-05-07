@@ -25,7 +25,7 @@ public class UsuarioService {
     @Autowired
     private static ModelMapper modelMapper;
 
-   public static double obtenerConsumo(Long id, LimiteUsuarioModeloDTO dto) {
+    public static double obtenerConsumo(Long id, LimiteUsuarioModeloDTO dto) {
         Usuario usuario = usuarioRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
@@ -72,9 +72,4 @@ public class UsuarioService {
     public void eliminarUsuario(Long id) {
         usuarioRepo.deleteById(id);
     }
-<<<<<<< HEAD
-
 }
-=======
-}
->>>>>>> 3d3847d5c25d2a12904acddd5675ffaf254f7c80
