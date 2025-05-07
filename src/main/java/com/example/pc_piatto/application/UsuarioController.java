@@ -16,12 +16,12 @@ public class UsuarioController {
 
     @GetMapping
     public List<UsuarioDTO> listarTodos() {
-        return usuarioService.listarUsuarios();
+        return UsuarioService.listarUsuarios();
     }
 
     @GetMapping("/{id}")
     public UsuarioDTO obtenerPorId(@PathVariable Long id) {
-        return usuarioService.obtenerUsuario(id);
+        return UsuarioService.obtenerUsuario(id);
     }
 
     @PostMapping
@@ -31,15 +31,16 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public UsuarioDTO actualizar(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
-        return usuarioService.actualizarUsuario(id, dto);
+        return UsuarioService.actualizarUsuario(id, dto);
     }
 
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
     }
+
     @GetMapping("/{id}/consumption")
-    public double consumo(@PathVariable Long id) {
-        return usuarioService.obtenerConsumo(id);
+    public double consumo(@PathVariable Long id, @RequestBody LimiteUsuarioModeloDTO dto) {
+        return UsuarioService.obtenerConsumo(id, dto);
     }
 }
