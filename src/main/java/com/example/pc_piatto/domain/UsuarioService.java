@@ -1,5 +1,6 @@
 package com.example.pc_piatto.domain;
 
+import com.example.pc_piatto.dto.LimiteUsuarioModeloDTO;
 import com.example.pc_piatto.dto.UsuarioDTO;
 import com.example.pc_piatto.repository.EmpresaRepository;
 import com.example.pc_piatto.repository.UsuarioRepository;
@@ -23,6 +24,15 @@ public class UsuarioService {
 
     @Autowired
     private static ModelMapper modelMapper;
+
+   public static double obtenerConsumo(Long id, LimiteUsuarioModeloDTO dto) {
+        Usuario usuario = usuarioRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+
+        double tokensCalculados = dto.getTokensConsumidos();
+        return tokensCalculados * dto.getCostoCalculado();
+    }
+
 
     public UsuarioDTO crearUsuario(UsuarioDTO dto) {
         Empresa empresa = empresaRepo.findById(dto.getEmpresaId())
@@ -61,10 +71,5 @@ public class UsuarioService {
 
     public void eliminarUsuario(Long id) {
         usuarioRepo.deleteById(id);
-    }
-
-    public static obtenerConsumo(Long id) {
-        // Lógica de consumo simulado (debes reemplazar con la real)
-        return 100.0; // Simula consumo
     }
 }

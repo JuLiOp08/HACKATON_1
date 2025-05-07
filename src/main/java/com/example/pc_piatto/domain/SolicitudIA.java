@@ -27,6 +27,7 @@ public class SolicitudIA {
     private LocalDateTime fechaHora;
     private String consulta;
     private String respuesta;
-    private int tokensConsumidos;
-    private double costoCalculado;
+    public static int tokensConsumidos;
+    public static double costoCalculado;
+
 }

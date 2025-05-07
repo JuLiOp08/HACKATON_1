@@ -43,8 +43,8 @@ public class LimiteUsuarioModeloController {
     }
 
     @GetMapping("{id}/consumption")
-    public LimiteUsuarioModeloDTO obtenerLimite(@PathVariable Long id) {
-        return UsuarioService.obtenerConsumo(id);
+    public double obtenerLimite(@PathVariable Long id, @RequestBody LimiteUsuarioModeloDTO dto) {
+        return UsuarioService.obtenerConsumo(id, dto);
     }
 
 }
