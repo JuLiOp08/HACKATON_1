@@ -10,5 +10,6 @@ public class UsuarioDTO {
     private String email;
     private RolUsuario rol;
     private Long empresaId;
+
 }
 
