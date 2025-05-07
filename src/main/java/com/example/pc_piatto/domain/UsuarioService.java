@@ -63,8 +63,4 @@ public class UsuarioService {
         usuarioRepo.deleteById(id);
     }
 
-    public static obtenerConsumo(Long id) {
-        // Lógica de consumo simulado (debes reemplazar con la real)
-        return 100.0; // Simula consumo
-    }
 }
