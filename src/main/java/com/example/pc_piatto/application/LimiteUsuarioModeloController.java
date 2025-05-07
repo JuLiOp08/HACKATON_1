@@ -47,5 +47,4 @@ public class LimiteUsuarioModeloController {
     public double obtenerLimite(@PathVariable Long id, @RequestBody LimiteUsuarioModeloDTO dto) {
         return UsuarioService.obtenerConsumo(id, dto);
     }
-
 }
