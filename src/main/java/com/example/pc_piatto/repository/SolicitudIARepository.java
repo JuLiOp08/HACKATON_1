@@ -9,5 +9,4 @@ import java.util.List;
 
 public interface SolicitudIARepository extends JpaRepository<SolicitudIA, Long> {
     List<SolicitudIA> findByUsuario(Usuario usuario);
-    List<SolicitudIA> findByModelo(ModeloIA modelo);
 }

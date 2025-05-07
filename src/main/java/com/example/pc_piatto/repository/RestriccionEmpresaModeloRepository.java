@@ -9,5 +9,4 @@ import java.util.List;
 
 public interface RestriccionEmpresaModeloRepository extends JpaRepository<RestriccionEmpresaModelo, Long> {
     List<RestriccionEmpresaModelo> findByEmpresa(Empresa empresa);
-    RestriccionEmpresaModelo findByEmpresaAndModelo(Empresa empresa, ModeloIA modelo);
 }

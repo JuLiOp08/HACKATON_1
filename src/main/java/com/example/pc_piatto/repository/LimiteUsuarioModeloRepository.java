@@ -8,6 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface LimiteUsuarioModeloRepository extends JpaRepository<LimiteUsuarioModelo, Long> {
-    List<LimiteUsuarioModelo> findByUsuario(Usuario usuario);
-    LimiteUsuarioModelo findByUsuarioAndModelo(Usuario usuario, ModeloIA modelo);
 }
