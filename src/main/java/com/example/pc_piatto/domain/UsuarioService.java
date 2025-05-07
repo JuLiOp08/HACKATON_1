@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 public class UsuarioService {
 
     @Autowired
-    private UsuarioRepository usuarioRepo;
+    private static UsuarioRepository usuarioRepo;
 
     @Autowired
     private EmpresaRepository empresaRepo;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private static ModelMapper modelMapper;
 
     public UsuarioDTO crearUsuario(UsuarioDTO dto) {
         Empresa empresa = empresaRepo.findById(dto.getEmpresaId())
@@ -35,19 +35,19 @@ public class UsuarioService {
         return modelMapper.map(guardado, UsuarioDTO.class);
     }
 
-    public List<UsuarioDTO> listarUsuarios() {
+    public static List<UsuarioDTO> listarUsuarios() {
         return usuarioRepo.findAll().stream()
                 .map(usuario -> modelMapper.map(usuario, UsuarioDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public UsuarioDTO obtenerUsuario(Long id) {
+    public static UsuarioDTO obtenerUsuario(Long id) {
         Usuario usuario = usuarioRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         return modelMapper.map(usuario, UsuarioDTO.class);
     }
 
-    public UsuarioDTO actualizarUsuario(Long id, UsuarioDTO dto) {
+    public static UsuarioDTO actualizarUsuario(Long id, UsuarioDTO dto) {
         Usuario usuario = usuarioRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
@@ -63,8 +63,8 @@ public class UsuarioService {
         usuarioRepo.deleteById(id);
     }
 
-    public double obtenerConsumo(Long id) {
+    public static obtenerConsumo(Long id) {
         // Lógica de consumo simulado (debes reemplazar con la real)
-        return 1000.0; // Simula consumo
+        return 100.0; // Simula consumo
     }
 }
