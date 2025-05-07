@@ -1,40 +1,42 @@
-package com.example.pc_piatto.deepseek;
+package com.example.pc_piatto.Deep;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class GitHubModelsConfig {
+public class DeepSeekConfig {
 
-    // CORRECCIÓN 1: Usar @Value con el nombre de la propiedad, no el valor directo
     @Value("${github.deepseek.token}")
-    private String apiToken;
-
-    // CORRECCIÓN 2: Usar @Value con el nombre de la propiedad, no la URL directa
+    private String githubToken;
+    
     @Value("${github.deepseek.endpoint}")
     private String apiEndpoint;
-
+    
+    @Value("${github.deepseek.model}")
+    private String modelName;
+    
     @Bean
-    public RestTemplate deepseekRestTemplate() {
+    public RestTemplate deepSeekRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-
+        
         // Configurar timeout
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(5000);
-        requestFactory.setReadTimeout(30000);
+        requestFactory.setConnectTimeout(5000); // 5 segundos
+        requestFactory.setReadTimeout(30000); // 30 segundos
+        
         restTemplate.setRequestFactory(requestFactory);
-
-        // Interceptor para autenticación
+        
+        // Configurar interceptor para el token
         restTemplate.getInterceptors().add((request, body, execution) -> {
-            request.getHeaders().add("Authorization", "Bearer " + apiToken);
+            request.getHeaders().add("Authorization", "Bearer " + githubToken);
             request.getHeaders().add("Content-Type", "application/json");
-            request.getHeaders().add("X-Model-Name", "deepseek/DeepSeek-R1");
+            request.getHeaders().add("X-Model-Name", modelName);
             return execution.execute(request, body);
         });
-
+        
         return restTemplate;
     }
 }

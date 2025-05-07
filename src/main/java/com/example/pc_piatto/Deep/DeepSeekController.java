@@ -1,4 +1,4 @@
-package com.example.pc_piatto.deepseek;
+package com.example.pc_piatto.Deep;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

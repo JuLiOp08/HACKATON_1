@@ -1,4 +1,4 @@
-package com.example.pc_piatto.deepseek;
+package com.example.pc_piatto.Deep;
 
 import lombok.Value;
 import org.slf4j.LoggerFactory;

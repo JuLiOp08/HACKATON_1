@@ -1,42 +1,40 @@
-package com.example.pc_piatto.deepseek;
+package com.example.pc_piatto.Deep;
 
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class DeepSeekConfig {
+public class GitHubModelsConfig {
 
+    // CORRECCIÓN 1: Usar @Value con el nombre de la propiedad, no el valor directo
     @Value("${github.deepseek.token}")
-    private String githubToken;
-    
+    private String apiToken;
+
+    // CORRECCIÓN 2: Usar @Value con el nombre de la propiedad, no la URL directa
     @Value("${github.deepseek.endpoint}")
     private String apiEndpoint;
-    
-    @Value("${github.deepseek.model}")
-    private String modelName;
-    
+
     @Bean
-    public RestTemplate deepSeekRestTemplate() {
+    public RestTemplate deepseekRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-        
+
         // Configurar timeout
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(5000); // 5 segundos
-        requestFactory.setReadTimeout(30000); // 30 segundos
-        
+        requestFactory.setConnectTimeout(5000);
+        requestFactory.setReadTimeout(30000);
         restTemplate.setRequestFactory(requestFactory);
-        
-        // Configurar interceptor para el token
+
+        // Interceptor para autenticación
         restTemplate.getInterceptors().add((request, body, execution) -> {
-            request.getHeaders().add("Authorization", "Bearer " + githubToken);
+            request.getHeaders().add("Authorization", "Bearer " + apiToken);
             request.getHeaders().add("Content-Type", "application/json");
-            request.getHeaders().add("X-Model-Name", modelName);
+            request.getHeaders().add("X-Model-Name", "deepseek/DeepSeek-R1");
             return execution.execute(request, body);
         });
-        
+
         return restTemplate;
     }
 }
