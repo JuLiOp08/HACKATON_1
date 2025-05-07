@@ -15,6 +15,8 @@ public class Usuario {
     private Long id;
 
     private String nombre;
+
+    @Column(nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
