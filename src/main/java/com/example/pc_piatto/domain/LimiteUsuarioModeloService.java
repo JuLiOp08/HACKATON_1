@@ -31,11 +31,14 @@ public class LimiteUsuarioModeloService {
         ModeloIA modelo = modeloRepo.findById(dto.getModeloId()).orElseThrow();
 
         LimiteUsuarioModelo limite = new LimiteUsuarioModelo();
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.map(dto, limite);
         limite.setUsuario(usuario);
-        limite.setModelo(modelo);
-        limite.setVentanaTiempo(dto.getVentanaTiempo());
-        limite.setValorMaximo(dto.getValorMaximo());
 
         return modelMapper.map(limiteRepo.save(limite), LimiteUsuarioModeloDTO.class);
+    }
+
+    public LimiteUsuarioModeloDTO crear(LimiteUsuarioModeloDTO dto) {
+
     }
 }
