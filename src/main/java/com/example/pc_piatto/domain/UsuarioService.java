@@ -72,4 +72,9 @@ public class UsuarioService {
     public void eliminarUsuario(Long id) {
         usuarioRepo.deleteById(id);
     }
+<<<<<<< HEAD
+
 }
+=======
+}
+>>>>>>> 3d3847d5c25d2a12904acddd5675ffaf254f7c80
