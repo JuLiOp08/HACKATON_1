@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/company/users")
+@RequestMapping("/api/company/users/{userId}/limits")
 public class LimiteUsuarioModeloController {
 
     @Autowired
@@ -26,7 +26,6 @@ public class LimiteUsuarioModeloController {
     public List<UsuarioDTO> listar() {
         return UsuarioService.listarUsuarios();
     }
-
 
     @GetMapping("/{id}")
     public UsuarioDTO obtener(@PathVariable Long id) {
