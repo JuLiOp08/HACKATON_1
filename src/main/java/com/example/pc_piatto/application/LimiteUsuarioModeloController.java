@@ -12,9 +12,17 @@ public class LimiteUsuarioModeloController {
     @Autowired
     private LimiteUsuarioModeloService limiteService;
 
+    @PostMapping
+    public LimiteUsuarioModeloDTO crear(@RequestBody LimiteUsuarioModeloDTO dto) {
+        return limiteService.crear(dto);
+    }
+
+
     @PostMapping("/{id}/limits")
     public LimiteUsuarioModeloDTO asignarLimite(@PathVariable Long id,
                                                 @RequestBody LimiteUsuarioModeloDTO dto) {
         return limiteService.asignarLimite(id, dto);
     }
+
+
 }
