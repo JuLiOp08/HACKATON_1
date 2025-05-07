@@ -2,6 +2,7 @@ package com.example.pc_piatto.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Empresa {
     private boolean estadoActivo;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Usuario> usuarios;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
