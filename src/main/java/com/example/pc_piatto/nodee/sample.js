@@ -1,17 +1,22 @@
 import OpenAI from "openai";
+import * as dotenv from "dotenv";
 
-const token = process.env["MY_AWESOME_SECRET"];
+dotenv.config(); // Carga variables de entorno desde .env
+
+const token = process.env.MY_AWESOME_SECRET;
 const endpoint = "https://models.github.ai/inference";
 const model = "openai/gpt-4.1";
 
-export async function main() {
-
-    const client = new OpenAI({ baseURL: endpoint, apiKey: token });
+async function main() {
+    const client = new OpenAI({
+        baseURL: endpoint,
+        apiKey: token
+    });
 
     const response = await client.chat.completions.create({
         messages: [
-            { role:"system", content: "You are a helpful assistant." },
-            { role:"user", content: "What is the capital of France?" }
+            { role: "system", content: "You are a helpful assistant." },
+            { role: "user", content: "What is the capital of France?" }
         ],
         temperature: 1.0,
         top_p: 1.0,
@@ -22,6 +27,5 @@ export async function main() {
 }
 
 main().catch((err) => {
-    console.error("The sample encountered an error:", err);
+    console.error("Error:", err);
 });
-
