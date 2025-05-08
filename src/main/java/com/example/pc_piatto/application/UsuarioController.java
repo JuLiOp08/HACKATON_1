@@ -4,6 +4,7 @@ import com.example.pc_piatto.domain.LimiteUsuario;
 import com.example.pc_piatto.domain.Usuario;
 import com.example.pc_piatto.domain.UsuarioService;
 import com.example.pc_piatto.dto.UsuarioDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -50,7 +51,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/{id}/limits")
-    public ResponseEntity<String> establecerLimite(@PathVariable Long id, @RequestBody Limite limiteAsignado, Authentication autenticacion) {
+    public ResponseEntity<String> establecerLimite(@PathVariable Long id, @RequestBody LimiteUsuario limiteAsignado, Authentication autenticacion) {
         servicioUsuario.verificarAccesoUsuario(autenticacion, id);
         servicioUsuario.asignarLimiteUsuario(id, limiteAsignado);
         return ResponseEntity.ok("Límite asignado exitosamente al usuario.");
