@@ -1,73 +1,67 @@
 package com.example.pc_piatto.application;
 
-import com.example.pc_piatto.domain.Limite;
+import com.example.pc_piatto.domain.LimiteUsuario;
+import com.example.pc_piatto.domain.Usuario;
+import com.example.pc_piatto.domain.UsuarioService;
+import com.example.pc_piatto.dto.UsuarioDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/company/users")
 public class UsuarioController {
 
-    private final UsuarioService usuarioService;
+    private final UsuarioService servicioUsuario;
 
-    public UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
+    public UsuarioController(UsuarioService servicioUsuario) {
+        this.servicioUsuario = servicioUsuario;
     }
 
-    // Solo COMPANY_ADMIN puede crear usuarios dentro de su empresa
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario, Authentication auth) {
-        usuarioService.validarEmpresa(auth, usuario.getEmpresa().getId());
-        return ResponseEntity.ok(usuarioService.crearUsuario(usuario));
+    public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario nuevoUsuario, Authentication autenticacion) {
+        servicioUsuario.verificarEmpresa(autenticacion, nuevoUsuario.getEmpresa().getId());
+        Usuario usuarioGuardado = servicioUsuario.crearUsuario(nuevoUsuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioGuardado);
     }
 
-    // COMPANY_ADMIN solo puede listar usuarios de su empresa
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
-    public ResponseEntity<List<Usuario>> listarUsuarios(@RequestParam Long empresaId, Authentication auth) {
-        usuarioService.validarEmpresa(auth, empresaId);
-        return ResponseEntity.ok(usuarioService.obtenerTodosPorEmpresa(empresaId));
+    public ResponseEntity<List<Usuario>> listarUsuarios(@RequestParam Long idEmpresa, Authentication autenticacion) {
+        servicioUsuario.verificarEmpresa(autenticacion, idEmpresa);
+        List<Usuario> usuarios = servicioUsuario.obtenerUsuariosPorEmpresa(idEmpresa);
+        return ResponseEntity.ok(usuarios);
     }
 
-    // COMPANY_ADMIN solo puede ver usuarios de su empresa
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
-    public ResponseEntity<Usuario> obtenerUsuario(@PathVariable Long id, Authentication auth) {
-        usuarioService.validarAccesoUsuario(auth, id);
-        return usuarioService.obtenerPorId(id)
+    public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable Long id, Authentication autenticacion) {
+        servicioUsuario.verificarAccesoUsuario(autenticacion, id);
+        return servicioUsuario.buscarUsuarioPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // COMPANY_ADMIN solo puede actualizar usuarios de su empresa
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario, Authentication auth) {
-        usuarioService.validarEmpresa(auth, id);
-        return ResponseEntity.ok(usuarioService.actualizarUsuario(id, usuario));
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario datosActualizados, Authentication autenticacion) {
+        servicioUsuario.verificarEmpresa(autenticacion, id);
+        Usuario usuarioActualizado = servicioUsuario.actualizarUsuario(id, datosActualizados);
+        return ResponseEntity.ok(usuarioActualizado);
     }
 
-    // COMPANY_ADMIN puede asignar límites solo a usuarios de su empresa
     @PostMapping("/{id}/limits")
-    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
-    public ResponseEntity<String> asignarLimiteUsuario(@PathVariable Long id, @RequestBody Limite limite, Authentication auth) {
-        usuarioService.validarAccesoUsuario(auth, id);
-        usuarioService.asignarLimite(id, limite);
-        return ResponseEntity.ok("Límite asignado correctamente al usuario.");
+    public ResponseEntity<String> establecerLimite(@PathVariable Long id, @RequestBody LimiteUsuario limiteAsignado, Authentication autenticacion) {
+        servicioUsuario.verificarAccesoUsuario(autenticacion, id);
+        servicioUsuario.asignarLimiteUsuario(id, limiteAsignado);
+        return ResponseEntity.ok("Límite asignado exitosamente al usuario.");
     }
 
-    // USER puede ver solo su propio consumo
     @GetMapping("/{id}/consumption")
-    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_COMPANY_ADMIN')")
-    public ResponseEntity<UsuarioDto> obtenerConsumoUsuario(@PathVariable Long id, Authentication auth) {
-        usuarioService.validarAccesoConsumo(auth, id);
-        UsuarioDto reporte = usuarioService.obtenerConsumo(id);
-        return ResponseEntity.ok(reporte);
+    public ResponseEntity<UsuarioDTO> consultarConsumo(@PathVariable Long id, Authentication autenticacion) {
+        servicioUsuario.verificarAccesoConsumo(autenticacion, id);
+        UsuarioDTO consumoUsuario = servicioUsuario.obtenerConsumo(id);
+        return ResponseEntity.ok(consumoUsuario);
     }
 }
 
