@@ -1,9 +1,12 @@
 package com.example.pc_piatto.application;
 
+import com.example.pc_piatto.domain.Limite;
+import com.example.pc_piatto.domain.Usuario;
 import com.example.pc_piatto.domain.UsuarioService;
-import com.example.pc_piatto.dto.LimiteUsuarioModeloDTO;
 import com.example.pc_piatto.dto.UsuarioDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,36 +15,63 @@ import java.util.List;
 @RequestMapping("/api/company/users")
 public class UsuarioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
-    @GetMapping
-    public List<UsuarioDTO> listarTodos() {
-        return UsuarioService.listarUsuarios();
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
-    @GetMapping("/{id}")
-    public UsuarioDTO obtenerPorId(@PathVariable Long id) {
-        return UsuarioService.obtenerUsuario(id);
-    }
-
+    // Solo COMPANY_ADMIN puede crear usuarios dentro de su empresa
     @PostMapping
-    public UsuarioDTO crear(@RequestBody UsuarioDTO dto) {
-        return usuarioService.crearUsuario(dto);
+    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario, Authentication auth) {
+        usuarioService.validarEmpresa(auth, usuario.getEmpresa().getId());
+        return ResponseEntity.ok(usuarioService.crearUsuario(usuario));
     }
 
+    // COMPANY_ADMIN solo puede listar usuarios de su empresa
+    @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
+    public ResponseEntity<List<Usuario>> listarUsuarios(@RequestParam Long empresaId, Authentication auth) {
+        usuarioService.validarEmpresa(auth, empresaId);
+        return ResponseEntity.ok(usuarioService.obtenerTodosPorEmpresa(empresaId));
+    }
+
+    // COMPANY_ADMIN solo puede ver usuarios de su empresa
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
+    public ResponseEntity<Usuario> obtenerUsuario(@PathVariable Long id, Authentication auth) {
+        usuarioService.validarAccesoUsuario(auth, id);
+        return usuarioService.obtenerPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // COMPANY_ADMIN solo puede actualizar usuarios de su empresa
     @PutMapping("/{id}")
-    public UsuarioDTO actualizar(@PathVariable Long id, @RequestBody UsuarioDTO dto) {
-        return UsuarioService.actualizarUsuario(id, dto);
+    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario, Authentication auth) {
+        usuarioService.validarEmpresa(auth, id);
+        return ResponseEntity.ok(usuarioService.actualizarUsuario(id, usuario));
     }
 
-    @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Long id) {
-        usuarioService.eliminarUsuario(id);
+    // COMPANY_ADMIN puede asignar límites solo a usuarios de su empresa
+    @PostMapping("/{id}/limits")
+    @PreAuthorize("hasAuthority('ROLE_COMPANY_ADMIN')")
+    public ResponseEntity<String> asignarLimiteUsuario(@PathVariable Long id, @RequestBody Limite limite, Authentication auth) {
+        usuarioService.validarAccesoUsuario(auth, id);
+        usuarioService.asignarLimite(id, limite);
+        return ResponseEntity.ok("Límite asignado correctamente al usuario.");
     }
 
+    // USER puede ver solo su propio consumo
     @GetMapping("/{id}/consumption")
-    public double consumo(@PathVariable Long id, @RequestBody LimiteUsuarioModeloDTO dto) {
-        return UsuarioService.obtenerConsumo(id, dto);
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_COMPANY_ADMIN')")
+    public ResponseEntity<UsuarioDto> obtenerConsumoUsuario(@PathVariable Long id, Authentication auth) {
+        usuarioService.validarAccesoConsumo(auth, id);
+        UsuarioDto reporte = usuarioService.obtenerConsumo(id);
+        return ResponseEntity.ok(reporte);
     }
 }
+
+

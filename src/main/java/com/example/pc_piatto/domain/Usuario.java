@@ -17,9 +17,8 @@ public class Usuario {
     private Long id;
 
     private String nombre;
-
-    @Column(nullable = false)
     private String email;
+    private String contrasena;
 
     @Enumerated(EnumType.STRING)
     private RolUsuario rol;
