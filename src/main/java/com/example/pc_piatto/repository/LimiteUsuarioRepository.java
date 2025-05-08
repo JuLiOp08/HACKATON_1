@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LimiteRepository extends JpaRepository<LimiteUsuario, Long> {
+public interface LimiteUsuarioRepository extends JpaRepository<LimiteUsuario, Long> {
 
 }

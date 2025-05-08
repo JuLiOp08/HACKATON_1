@@ -1,15 +1,11 @@
 package com.example.pc_piatto.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
-import java.util.List;
-
-@Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
 
     @Id
@@ -17,14 +13,15 @@ public class Usuario {
     private Long id;
 
     private String nombre;
-    private String email;
+    private String correo;
     private String contrasena;
 
     @Enumerated(EnumType.STRING)
-    private RolUsuario rol;
+    private UsuarioRol rol;
 
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
+    private boolean activo;
 }

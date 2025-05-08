@@ -1,74 +1,114 @@
 package com.example.pc_piatto.domain;
 
+import com.example.pc_piatto.repository.LimiteUsuarioRepository;
 import com.example.pc_piatto.dto.UsuarioDTO;
-import com.example.pc_piatto.repository.EmpresaRepository;
+import org.springframework.security.core.Authentication;
+import com.example.pc_piatto.repository.SolicitudIARepository;
 import com.example.pc_piatto.repository.UsuarioRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepo;
+    private final UsuarioRepository UsuarioRepository;
+    private final LimiteUsuarioRepository LimiteUsuarioRepository;
+    private final SolicitudIARepository SolicitudIARepository;
 
-    @Autowired
-    private EmpresaRepository empresaRepo;
+    public UsuarioService(UsuarioRepository UsuarioRepository,
+                          LimiteUsuarioRepository LimiteUsuarioRepository,
+                          SolicitudIARepository SolicitudIARepository) {
+        this.UsuarioRepository = UsuarioRepository;
+        this.LimiteUsuarioRepository = LimiteUsuarioRepository;
+        this.SolicitudIARepository = SolicitudIARepository;
+    }
 
-    @Autowired
-    private ModelMapper modelMapper;
+    public Usuario crearUsuario(Usuario usuario) {
+        usuario.setActivo(true);
+        return UsuarioRepository.save(usuario);
+    }
 
-    public double obtenerConsumo(Long id, LimiteUsuarioModeloDTO dto) {
-        Usuario usuario = usuarioRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+    public List<Usuario> obtenerTodosPorEmpresa(Long empresaId) {
+        return UsuarioRepository.findByEmpresaId(empresaId);
+    }
 
-        double tokensCalculados = dto.getTokensConsumidos();
-        return tokensCalculados * dto.getCostoCalculado();
+    public Optional<Usuario> obtenerPorId(Long id) {
+        return UsuarioRepository.findById(id);
+    }
+
+    public Usuario actualizarUsuario(Long id, Usuario datosActualizados) {
+        Usuario usuario = UsuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuario.setNombre(datosActualizados.getNombre());
+        usuario.setCorreo(datosActualizados.getCorreo());
+        return UsuarioRepository.save(usuario);
+    }
+
+    public void asignarLimite(Long usuarioId, LimiteUsuario limite) {
+        Usuario usuario = UsuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        limite.setUsuario(usuario);
+        LimiteUsuarioRepository.save(limite);
+    }
+
+    public UsuarioDTO obtenerConsumo(Long usuarioId) {
+        Usuario usuario = UsuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        int totalSolicitudes = Math.toIntExact(SolicitudIARepository.countByUsuarioId(usuarioId));
+        int totalTokens = SolicitudIARepository.sumTokensByUsuarioId(usuarioId);
+
+        return new UsuarioDTO(usuarioId, totalSolicitudes, totalTokens);
     }
 
 
-    public UsuarioDTO crearUsuario(UsuarioDTO dto) {
-        Empresa empresa = empresaRepo.findById(dto.getEmpresaId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Empresa no encontrada"));
+    public void validarEmpresa(Authentication auth, Long empresaId) {
+        Usuario actual = (Usuario) UsuarioRepository.findByCorreo(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        Usuario usuario = modelMapper.map(dto, Usuario.class);
-        usuario.setEmpresa(empresa);
+        if (!actual.getRol().equals(UsuarioRol.ROLE_COMPANY_ADMIN)) {
+            throw new RuntimeException("No autorizado.");
+        }
 
-        Usuario guardado = usuarioRepo.save(usuario);
-        return modelMapper.map(guardado, UsuarioDTO.class);
+        if (!actual.getEmpresa().getId().equals(empresaId)) {
+            throw new RuntimeException("Acceso denegado a esta empresa.");
+        }
     }
 
-    public List<UsuarioDTO> listarUsuarios() {
-        return usuarioRepo.findAll().stream()
-                .map(usuario -> modelMapper.map(usuario, UsuarioDTO.class))
-                .collect(Collectors.toList());
+
+    public void validarAccesoUsuario(Authentication auth, Long usuarioId) {
+        Usuario actual = (Usuario) UsuarioRepository.findByCorreo(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Usuario objetivo = UsuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuario destino no encontrado"));
+
+        if (!actual.getRol().equals(UsuarioRol.ROLE_COMPANY_ADMIN)) {
+            throw new RuntimeException("No autorizado.");
+        }
+
+        if (!actual.getEmpresa().getId().equals(objetivo.getEmpresa().getId())) {
+            throw new RuntimeException("Acceso denegado a usuarios fuera de su empresa.");
+        }
     }
 
-    public UsuarioDTO obtenerUsuario(Long id) {
-        Usuario usuario = usuarioRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
-        return modelMapper.map(usuario, UsuarioDTO.class);
-    }
+    public void validarAccesoConsumo(Authentication auth, Long usuarioId) {
+        Usuario actual = (Usuario) UsuarioRepository.findByCorreo(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-    public UsuarioDTO actualizarUsuario(Long id, UsuarioDTO dto) {
-        Usuario usuario = usuarioRepo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        if (actual.getRol().equals(UsuarioRol.ROLE_USER) && !actual.getId().equals(usuarioId)) {
+            throw new RuntimeException("No puede ver el consumo de otro usuario.");
+        }
 
-        usuario.setNombre(dto.getNombre());
-        usuario.setEmail(dto.getEmail());
-        usuario.setRol(dto.getRol());
+        if (actual.getRol().equals(UsuarioRol.ROLE_COMPANY_ADMIN)) {
+            Usuario destino = UsuarioRepository.findById(usuarioId)
+                    .orElseThrow(() -> new RuntimeException("Usuario destino no encontrado"));
 
-        Usuario actualizado = usuarioRepo.save(usuario);
-        return modelMapper.map(actualizado, UsuarioDTO.class);
-    }
-
-    public void eliminarUsuario(Long id) {
-        usuarioRepo.deleteById(id);
+            if (!actual.getEmpresa().getId().equals(destino.getEmpresa().getId())) {
+                throw new RuntimeException("No autorizado para ver el consumo de este usuario.");
+            }
+        }
     }
 }

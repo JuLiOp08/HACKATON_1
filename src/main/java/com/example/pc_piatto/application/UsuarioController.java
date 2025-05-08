@@ -1,9 +1,6 @@
 package com.example.pc_piatto.application;
 
 import com.example.pc_piatto.domain.Limite;
-import com.example.pc_piatto.domain.Usuario;
-import com.example.pc_piatto.domain.UsuarioService;
-import com.example.pc_piatto.dto.UsuarioDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

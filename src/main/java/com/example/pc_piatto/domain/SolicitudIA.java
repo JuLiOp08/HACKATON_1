@@ -1,6 +1,5 @@
 package com.example.pc_piatto.domain;
 
-import com.example.pc_piatto.domain.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
