@@ -1,8 +1,8 @@
 package com.example.pc_piatto.application;
 
+import com.example.pc_piatto.domain.SolicitudIA;
 import com.example.pc_piatto.domain.SolicitudIAService;
-import com.example.pc_piatto.dto.SolicitudIADTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,32 +11,29 @@ import java.util.List;
 @RequestMapping("/api/ai")
 public class SolicitudIAController {
 
-    @Autowired
-    private SolicitudIAService solicitudService;
+    private final SolicitudIAService SolicitudIAService;
+
+    public SolicitudIAController(SolicitudIAService SolicitudIAService) {
+        this.SolicitudIAService = SolicitudIAService;
+    }
 
     @PostMapping("/chat")
-    public SolicitudIADTO usarChat(@RequestParam Long usuarioId,
-                                   @RequestParam Long modeloId,
-                                   @RequestBody String consulta) {
-        return solicitudService.procesarSolicitud(usuarioId, modeloId, consulta, "chat");
+    public ResponseEntity<SolicitudIA> crearChat(@RequestBody SolicitudIA SolicitudIA) {
+        return ResponseEntity.ok(SolicitudIAService.registrarSolicitudIA(SolicitudIA));
     }
 
     @PostMapping("/completion")
-    public SolicitudIADTO usarCompletion(@RequestParam Long usuarioId,
-                                         @RequestParam Long modeloId,
-                                         @RequestBody String consulta) {
-        return solicitudService.procesarSolicitud(usuarioId, modeloId, consulta, "completion");
+    public ResponseEntity<SolicitudIA> crearCompletion(@RequestBody SolicitudIA SolicitudIA) {
+        return ResponseEntity.ok(SolicitudIAService.registrarSolicitudIA(SolicitudIA));
     }
 
     @PostMapping("/multimodal")
-    public SolicitudIADTO usarMultimodal(@RequestParam Long usuarioId,
-                                         @RequestParam Long modeloId,
-                                         @RequestBody String consulta) {
-        return solicitudService.procesarSolicitud(usuarioId, modeloId, consulta, "multimodal");
+    public ResponseEntity<SolicitudIA> crearMultimodal(@RequestBody SolicitudIA SolicitudIA) {
+        return ResponseEntity.ok(SolicitudIAService.registrarSolicitudIA(SolicitudIA));
     }
 
     @GetMapping("/history")
-    public List<SolicitudIADTO> historial(@RequestParam Long usuarioId) {
-        return solicitudService.historialDeUsuario(usuarioId);
+    public ResponseEntity<List<SolicitudIA>> historialUsuario(@RequestParam Long usuarioId) {
+        return ResponseEntity.ok(SolicitudIAService.obtenerHistorialPorUsuario(usuarioId));
     }
 }

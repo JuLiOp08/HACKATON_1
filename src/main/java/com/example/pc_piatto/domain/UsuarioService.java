@@ -1,6 +1,5 @@
 package com.example.pc_piatto.domain;
 
-import com.example.pc_piatto.dto.LimiteUsuarioModeloDTO;
 import com.example.pc_piatto.dto.UsuarioDTO;
 import com.example.pc_piatto.repository.EmpresaRepository;
 import com.example.pc_piatto.repository.UsuarioRepository;
