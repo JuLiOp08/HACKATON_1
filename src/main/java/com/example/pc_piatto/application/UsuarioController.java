@@ -18,7 +18,7 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario nuevoUsuario, Authentication autenticacion) {
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario nuevoUsuario, Authentication autenticacion) {
         servicioUsuario.verificarEmpresa(autenticacion, nuevoUsuario.getEmpresa().getId());
         Usuario usuarioGuardado = servicioUsuario.crearUsuario(nuevoUsuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioGuardado);
