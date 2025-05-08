@@ -30,11 +30,11 @@ public class UsuarioService {
         return UsuarioRepository.save(usuario);
     }
 
-    public List<Usuario> obtenerTodosPorEmpresa(Long empresaId) {
+    public List<Usuario> obtenerUsuariosPorEmpresa(Long empresaId) {
         return UsuarioRepository.findByEmpresaId(empresaId);
     }
 
-    public Optional<Usuario> obtenerPorId(Long id) {
+    public Optional<Usuario> buscarUsuarioPorId(Long id) {
         return UsuarioRepository.findById(id);
     }
 
@@ -46,7 +46,7 @@ public class UsuarioService {
         return UsuarioRepository.save(usuario);
     }
 
-    public void asignarLimite(Long usuarioId, LimiteUsuario limite) {
+    public void asignarLimiteUsuario(Long usuarioId, LimiteUsuario limite) {
         Usuario usuario = UsuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         limite.setUsuario(usuario);
@@ -64,7 +64,7 @@ public class UsuarioService {
     }
 
 
-    public void validarEmpresa(Authentication auth, Long empresaId) {
+    public void verificarEmpresa(Authentication auth, Long empresaId) {
         Usuario actual = (Usuario) UsuarioRepository.findByCorreo(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -78,7 +78,7 @@ public class UsuarioService {
     }
 
 
-    public void validarAccesoUsuario(Authentication auth, Long usuarioId) {
+    public void verificarAccesoUsuario(Authentication auth, Long usuarioId) {
         Usuario actual = (Usuario) UsuarioRepository.findByCorreo(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -94,7 +94,7 @@ public class UsuarioService {
         }
     }
 
-    public void validarAccesoConsumo(Authentication auth, Long usuarioId) {
+    public void verificarAccesoConsumo(Authentication auth, Long usuarioId) {
         Usuario actual = (Usuario) UsuarioRepository.findByCorreo(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
