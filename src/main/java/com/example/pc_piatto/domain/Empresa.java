@@ -28,4 +28,7 @@ public class Empresa {
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<RestriccionEmpresaModelo> restricciones;
+
+
+    
 }
