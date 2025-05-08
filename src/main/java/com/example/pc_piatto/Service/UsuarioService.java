@@ -1,13 +1,13 @@
 package com.example.pc_piatto.Service;
 
+import com.example.pc_piatto.Enum.UsuarioRol;
 import com.example.pc_piatto.domain.LimiteUsuario;
 import com.example.pc_piatto.domain.Usuario;
-import com.example.pc_piatto.Enum.UsuarioRol;
-import com.example.pc_piatto.repository.LimiteUsuarioRepository;
 import com.example.pc_piatto.dto.UsuarioDTO;
-import org.springframework.security.core.Authentication;
+import com.example.pc_piatto.repository.LimiteUsuarioRepository;
 import com.example.pc_piatto.repository.SolicitudIARepository;
 import com.example.pc_piatto.repository.UsuarioRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class UsuarioService {
     }
 
     public Usuario crearUsuario(Usuario usuario) {
-        usuario.setActivo(true);
+        usuario.setEnable(true);
         return UsuarioRepository.save(usuario);
     }
 
@@ -45,7 +45,7 @@ public class UsuarioService {
         Usuario usuario = UsuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         usuario.setNombre(datosActualizados.getNombre());
-        usuario.setCorreo(datosActualizados.getCorreo());
+        usuario.setEmail(datosActualizados.getEmail());
         return UsuarioRepository.save(usuario);
     }
 
