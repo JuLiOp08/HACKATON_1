@@ -1,6 +1,6 @@
 package com.example.pc_piatto.application;
 
-import com.example.pc_piatto.domain.ModeloIAService;
+import com.example.pc_piatto.Service.ModeloIAService;
 import com.example.pc_piatto.dto.ModeloIADTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

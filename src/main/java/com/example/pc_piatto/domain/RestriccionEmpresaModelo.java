@@ -1,5 +1,6 @@
 package com.example.pc_piatto.domain;
 
+import com.example.pc_piatto.Enum.TipoLimite;
 import jakarta.persistence.*;
 import lombok.*;
 

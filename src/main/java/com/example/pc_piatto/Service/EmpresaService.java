@@ -1,5 +1,6 @@
-package com.example.pc_piatto.domain;
+package com.example.pc_piatto.Service;
 
+import com.example.pc_piatto.domain.Empresa;
 import com.example.pc_piatto.dto.EmpresaDTO;
 import com.example.pc_piatto.repository.EmpresaRepository;
 import org.modelmapper.ModelMapper;

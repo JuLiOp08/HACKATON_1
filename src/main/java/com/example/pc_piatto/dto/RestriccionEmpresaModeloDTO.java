@@ -1,6 +1,6 @@
 package com.example.pc_piatto.dto;
 
-import com.example.pc_piatto.domain.TipoLimite;
+import com.example.pc_piatto.Enum.TipoLimite;
 import lombok.Data;
 
 @Data

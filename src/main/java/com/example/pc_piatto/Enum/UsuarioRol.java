@@ -1,4 +1,4 @@
-package com.example.pc_piatto.domain;
+package com.example.pc_piatto.Enum;
 
 public enum UsuarioRol {
     ROLE_USER,

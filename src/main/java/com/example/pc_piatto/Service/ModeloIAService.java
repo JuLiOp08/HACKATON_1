@@ -1,5 +1,8 @@
-package com.example.pc_piatto.domain;
+package com.example.pc_piatto.Service;
 
+import com.example.pc_piatto.domain.Empresa;
+import com.example.pc_piatto.domain.RestriccionEmpresaModelo;
+import com.example.pc_piatto.domain.Usuario;
 import com.example.pc_piatto.dto.ModeloIADTO;
 import com.example.pc_piatto.repository.RestriccionEmpresaModeloRepository;
 import com.example.pc_piatto.repository.UsuarioRepository;

@@ -1,5 +1,6 @@
-package com.example.pc_piatto.domain;
+package com.example.pc_piatto.Service;
 
+import com.example.pc_piatto.domain.SolicitudIA;
 import com.example.pc_piatto.repository.SolicitudIARepository;
 import org.springframework.stereotype.Service;
 

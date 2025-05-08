@@ -1,5 +1,6 @@
 package com.example.pc_piatto.domain;
 
+import com.example.pc_piatto.Enum.UsuarioRol;
 import jakarta.persistence.*;
 import lombok.Data;
 
