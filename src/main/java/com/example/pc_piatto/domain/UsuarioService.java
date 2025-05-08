@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 public class UsuarioService {
 
     @Autowired
-    private static UsuarioRepository usuarioRepo;
+    private UsuarioRepository usuarioRepo;
 
     @Autowired
     private EmpresaRepository empresaRepo;
 
     @Autowired
-    private static ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
-    public static double obtenerConsumo(Long id, LimiteUsuarioModeloDTO dto) {
+    public double obtenerConsumo(Long id, LimiteUsuarioModeloDTO dto) {
         Usuario usuario = usuarioRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
@@ -45,19 +45,19 @@ public class UsuarioService {
         return modelMapper.map(guardado, UsuarioDTO.class);
     }
 
-    public static List<UsuarioDTO> listarUsuarios() {
+    public List<UsuarioDTO> listarUsuarios() {
         return usuarioRepo.findAll().stream()
                 .map(usuario -> modelMapper.map(usuario, UsuarioDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public static UsuarioDTO obtenerUsuario(Long id) {
+    public UsuarioDTO obtenerUsuario(Long id) {
         Usuario usuario = usuarioRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         return modelMapper.map(usuario, UsuarioDTO.class);
     }
 
-    public static UsuarioDTO actualizarUsuario(Long id, UsuarioDTO dto) {
+    public UsuarioDTO actualizarUsuario(Long id, UsuarioDTO dto) {
         Usuario usuario = usuarioRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
